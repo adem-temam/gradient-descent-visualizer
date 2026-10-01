@@ -43,9 +43,12 @@ def plot_2d_contour(
             colorbar=dict(
                 title=dict(
                     text="log(1 + f - f*)" if log_scale_contours else "f(x, y)",
-                    font=dict(size=12, color="#cbd5e1"),
+                    side="top",
+                    font=dict(size=11, color="#cbd5e1"),
                 ),
-                tickfont=dict(color="#94a3b8"),
+                x=1.02,
+                len=0.9,
+                tickfont=dict(color="#94a3b8", size=10),
             ),
             hoverinfo="x+y+z",
             showscale=True,
@@ -100,13 +103,12 @@ def plot_2d_contour(
             mode="markers",
             marker=dict(
                 symbol="star",
-                size=14,
+                size=11,
                 color="#facc15",
                 line=dict(color="#000000", width=1.5),
             ),
-            name="Global Minimum",
-            hovertext=[f"Min: ({x:.3f}, {y:.3f})" for x, y in surface.global_minima],
-            hoverinfo="text",
+            name="Global Minimum (θ*)",
+            hovertemplate="<b>Global Minimum (θ*)</b><br>x: %{x:.4f}<br>y: %{y:.4f}<extra></extra>",
         )
     )
 
@@ -184,8 +186,10 @@ def plot_2d_contour(
 
     fig.update_layout(
         title=dict(
-            text=f"<b>2D Loss Contour & Trajectories</b> : {surface.name}",
-            font=dict(size=16, color="#f8fafc"),
+            text=f"<b>2D Loss Contour & Trajectories:</b> {surface.name}",
+            font=dict(size=15, color="#f8fafc"),
+            x=0.01,
+            y=0.98,
         ),
         xaxis=dict(
             title="x",
@@ -200,18 +204,24 @@ def plot_2d_contour(
             zeroline=False,
             gridcolor="#334155",
             color="#94a3b8",
-            scaleanchor="x",
-            scaleratio=1,
         ),
+        dragmode="zoom",
+        uirevision=surface.id,
+        hovermode="closest",
         paper_bgcolor="#0f172a",
         plot_bgcolor="#0f172a",
         legend=dict(
-            font=dict(color="#e2e8f0"),
-            bgcolor="rgba(15, 23, 42, 0.8)",
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="left",
+            x=0.0,
+            font=dict(color="#e2e8f0", size=11),
+            bgcolor="rgba(15, 23, 42, 0.75)",
             bordercolor="#334155",
             borderwidth=1,
         ),
-        margin=dict(l=40, r=40, t=50, b=40),
+        margin=dict(l=45, r=70, t=75, b=45),
     )
     return fig
 
@@ -278,7 +288,7 @@ def plot_3d_surface(
 
     fig.update_layout(
         title=dict(
-            text=f"<b>3D Loss Landscape</b> : {surface.name}",
+            text=f"<b>3D Loss Landscape:</b> {surface.name}",
             font=dict(size=16, color="#f8fafc"),
         ),
         scene=dict(
@@ -286,15 +296,23 @@ def plot_3d_surface(
             yaxis=dict(title="y", gridcolor="#334155", color="#94a3b8", backgroundcolor="#0f172a"),
             zaxis=dict(title="f(x, y)", gridcolor="#334155", color="#94a3b8", backgroundcolor="#0f172a"),
             camera=dict(eye=dict(x=1.6, y=1.6, z=1.2)),
+            aspectmode="cube",
+            dragmode="orbit",
         ),
+        uirevision=surface.id,
         paper_bgcolor="#0f172a",
         legend=dict(
-            font=dict(color="#e2e8f0"),
-            bgcolor="rgba(15, 23, 42, 0.8)",
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="left",
+            x=0.0,
+            font=dict(color="#e2e8f0", size=11),
+            bgcolor="rgba(15, 23, 42, 0.75)",
             bordercolor="#334155",
             borderwidth=1,
         ),
-        margin=dict(l=10, r=10, t=40, b=10),
+        margin=dict(l=10, r=10, t=65, b=10),
     )
     return fig
 
@@ -316,9 +334,7 @@ def plot_loss_curves(results: dict[str, TrajectoryResult]) -> go.Figure:
                 mode="lines",
                 line=dict(color=res.color, width=2.5),
                 name=opt_name,
-                hovertemplate=(
-                    f"<b>{opt_name}</b><br>Step: %{{x}}<br>Loss: %{{y:.4e}}<extra></extra>"
-                ),
+                hovertemplate=f"<b>{opt_name}</b>: %{{y:.4e}}<extra></extra>",
             )
         )
 
@@ -331,11 +347,14 @@ def plot_loss_curves(results: dict[str, TrajectoryResult]) -> go.Figure:
             gridcolor="#334155",
             color="#94a3b8",
         ),
+        hovermode="x unified",
+        uirevision="constant",
+        dragmode="zoom",
         paper_bgcolor="#0f172a",
         plot_bgcolor="#0f172a",
         legend=dict(
             font=dict(color="#e2e8f0"),
-            bgcolor="rgba(15, 23, 42, 0.8)",
+            bgcolor="rgba(15, 23, 42, 0.85)",
             bordercolor="#334155",
             borderwidth=1,
         ),
@@ -361,9 +380,7 @@ def plot_distance_curves(results: dict[str, TrajectoryResult]) -> go.Figure:
                 mode="lines",
                 line=dict(color=res.color, width=2.5),
                 name=opt_name,
-                hovertemplate=(
-                    f"<b>{opt_name}</b><br>Step: %{{x}}<br>Distance: %{{y:.4e}}<extra></extra>"
-                ),
+                hovertemplate=f"<b>{opt_name}</b>: %{{y:.4e}}<extra></extra>",
             )
         )
 
@@ -379,11 +396,14 @@ def plot_distance_curves(results: dict[str, TrajectoryResult]) -> go.Figure:
             gridcolor="#334155",
             color="#94a3b8",
         ),
+        hovermode="x unified",
+        uirevision="constant",
+        dragmode="zoom",
         paper_bgcolor="#0f172a",
         plot_bgcolor="#0f172a",
         legend=dict(
             font=dict(color="#e2e8f0"),
-            bgcolor="rgba(15, 23, 42, 0.8)",
+            bgcolor="rgba(15, 23, 42, 0.85)",
             bordercolor="#334155",
             borderwidth=1,
         ),
