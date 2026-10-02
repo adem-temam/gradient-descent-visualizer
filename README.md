@@ -66,7 +66,7 @@ I built this project to study and visualize:
 ### 1. Set Up Environment
 
 ```bash
-git clone https://github.com/your-username/gradient-descent-visualizer.git
+git clone https://github.com/adem-temam/gradient-descent-visualizer.git
 cd gradient-descent-visualizer
 
 python3 -m venv .venv
